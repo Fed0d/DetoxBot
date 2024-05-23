@@ -26,3 +26,7 @@ words_settings = InlineKeyboardMarkup(inline_keyboard=[
      InlineKeyboardButton(text=button_texts['remove_words'], callback_data='remove_words')],
     [InlineKeyboardButton(text=button_texts['back'], callback_data='back_to_settings')]
 ])
+
+back_to_word_settings = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text=button_texts['back'], callback_data='back_to_word_settings')]
+])

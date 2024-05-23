@@ -48,7 +48,7 @@ async def process_text(message: Message, state: FSMContext):
 
     words = await rq.get_words(message.from_user.id)
 
-    await message.answer(detox(data['text'], words))
+    await message.answer(detox(data['text'], words), reply_markup=kb.start)
     await state.clear()
 
 
@@ -72,9 +72,9 @@ async def process_add_words(callback: CallbackQuery, state: FSMContext):
     first_sentence = f'*Ваши добавленные слова:* _{", ".join(added_words)}_\n\n' if added_words else '*У вас пока нет добавленных слов.*\n\n'
 
     await state.set_state(AddWords.words)
-    await callback.message.answer(
+    await callback.message.edit_text(
         first_sentence + 'Отправьте мне слова, которые нужно добавить в список нецензурных слов.\n',
-        parse_mode='Markdown')
+        parse_mode='Markdown', reply_markup=kb.back_to_word_settings)
 
 
 @router.message(AddWords.words)
@@ -82,7 +82,7 @@ async def process_add_words(message: Message, state: FSMContext):
     words = set(message.text.split())
 
     await rq.set_added_user_words(message.from_user.id, words)
-    await message.answer('Слова добавлены.')
+    await message.answer('Слова добавлены.', reply_markup=kb.words_settings)
     await state.clear()
 
 
@@ -94,9 +94,9 @@ async def process_remove_words(callback: CallbackQuery, state: FSMContext):
     first_sentence = f'*Ваши удалённые слова:* _{", ".join(removed_words)}_\n\n' if removed_words else '*У вас пока нет удалённых слов.*\n\n'
 
     await state.set_state(RemoveWords.words)
-    await callback.message.answer(
+    await callback.message.edit_text(
         first_sentence + 'Отправьте мне слова, которые нужно удалить из списка нецензурных слов.\n',
-        parse_mode='Markdown')
+        parse_mode='Markdown', reply_markup=kb.back_to_word_settings)
 
 
 @router.message(RemoveWords.words)
@@ -104,7 +104,7 @@ async def process_remove_words(message: Message, state: FSMContext):
     words = set(message.text.split())
 
     await rq.set_removed_user_words(message.from_user.id, words)
-    await message.answer('Слова удалены.')
+    await message.answer('Слова удалены.', reply_markup=kb.words_settings)
     await state.clear()
 
 
@@ -112,6 +112,12 @@ async def process_remove_words(message: Message, state: FSMContext):
 async def process_back_to_settings(callback: CallbackQuery):
     await callback.answer('')
     await callback.message.edit_text('Выберите необходимые настройки.', reply_markup=kb.settings)
+
+
+@router.callback_query(F.data == 'back_to_word_settings')
+async def process_back_to_word_settings(callback: CallbackQuery):
+    await callback.answer('')
+    await callback.message.edit_text('Выберите необходимые действия.', reply_markup=kb.words_settings)
 
 
 @router.message(Command('help'))
