@@ -10,8 +10,7 @@ def initialize_database():
     cursor.execute('CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY, word TEXT UNIQUE)')
     cursor.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, user_id INTEGER UNIQUE)')
     cursor.execute('CREATE TABLE IF NOT EXISTS user_removed_words (id INTEGER PRIMARY KEY, user_id INTEGER, '
-                   'word_id INTEGER UNIQUE, FOREIGN KEY (user_id) REFERENCES users (id), FOREIGN KEY (word_id)'
-                   ' REFERENCES words (id))')
+                   'word TEXT UNIQUE, FOREIGN KEY (user_id) REFERENCES users (id))')
     cursor.execute('CREATE TABLE IF NOT EXISTS user_added_words (id INTEGER PRIMARY KEY, user_id INTEGER, '
                    'word TEXT UNIQUE, FOREIGN KEY (user_id) REFERENCES users (id))')
     cursor.execute('SELECT COUNT(*) FROM words')

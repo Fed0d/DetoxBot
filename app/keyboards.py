@@ -3,7 +3,11 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeybo
 button_texts = {
     'process_text': 'Обработать текст 📝',
     'settings': 'Настройки ⚙️',
-    'help': 'Помощь ❓'
+    'help': 'Помощь ❓',
+    'words_settings': 'Настройки списка нецензурных слов 🤬',
+    'add_words': 'Добавить слова 🟢',
+    'remove_words': 'Удалить слова 🔴',
+    'back': 'Назад ↩️'
 }
 
 start = ReplyKeyboardMarkup(keyboard=[
@@ -12,3 +16,13 @@ start = ReplyKeyboardMarkup(keyboard=[
 ],
     resize_keyboard=True,
     input_field_placeholder='Выберите пункт меню.')
+
+settings = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text=button_texts['words_settings'], callback_data='words_settings')]
+])
+
+words_settings = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text=button_texts['add_words'], callback_data='add_words'),
+     InlineKeyboardButton(text=button_texts['remove_words'], callback_data='remove_words')],
+    [InlineKeyboardButton(text=button_texts['back'], callback_data='back_to_settings')]
+])
