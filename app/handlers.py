@@ -104,11 +104,11 @@ async def process_words_list(callback: CallbackQuery):
     words = await rq.get_words(callback.from_user.id)
     file = io.StringIO('\n'.join(words))
 
-    await message.delete()
     await callback.message.reply_document(document=BufferedInputFile(
         file=file.getvalue().encode('UTF-8'),
         filename='words.txt'
     ), caption='Список нецензурных слов.', reply_markup=kb.start)
+    await message.delete()
 
 
 @router.message(Command('help'))
@@ -138,7 +138,7 @@ async def process_remove_words(message: Message, state: FSMContext):
     words = set(message.text.split())
 
     await rq.set_removed_user_words(message.from_user.id, words)
-    await message.answer('Слова удалены.', reply_markup=kb.words_settings)
+    await message.answer('Слова удалены.', reply_markup=kb.start)
     await state.clear()
 
 
@@ -147,5 +147,5 @@ async def process_add_words(message: Message, state: FSMContext):
     words = set(message.text.split())
 
     await rq.set_added_user_words(message.from_user.id, words)
-    await message.answer('Слова добавлены.', reply_markup=kb.words_settings)
+    await message.answer('Слова добавлены.', reply_markup=kb.start)
     await state.clear()

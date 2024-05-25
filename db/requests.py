@@ -40,7 +40,7 @@ async def set_added_user_words(user_id: int, words: set[str]) -> None:
 
     for word in words:
         word = word.lower()
-        cursor.execute('SELECT (?) FROM words', (word,))
+        cursor.execute('SELECT * FROM words WHERE word = ?', (word,))
         word_in_db = cursor.fetchone()
         if word_in_db is None:
             cursor.execute('INSERT OR IGNORE INTO user_added_words (user_id, word) VALUES (?, ?)', (user_id, word))
@@ -94,8 +94,6 @@ async def get_removed_user_words(user_id: int) -> set[str]:
     cursor.execute('SELECT word FROM user_removed_words WHERE user_id = ?', (user_id,))
     removed_words = set(row[0] for row in cursor.fetchall())
 
-    words = removed_words
-
     connection.close()
 
-    return words
+    return removed_words
