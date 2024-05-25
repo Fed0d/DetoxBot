@@ -3,7 +3,7 @@ from ufal.udpipe import Model, Pipeline
 from config import MODEL
 
 
-def detox(message, words):
+def detox(message: str, words: set[str]) -> str:
     model = Model.load(MODEL)
 
     pipeline = Pipeline(model, 'tokenize', Pipeline.DEFAULT, Pipeline.DEFAULT, 'conllu')
